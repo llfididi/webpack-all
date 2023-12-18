@@ -31,25 +31,61 @@ module.exports = {
       //     test: /.png$/,
       //     use: 'file-loader'
       //   },
+
+
       {
-        test: /.png$/,
-        use: {
-          loader: "url-loader",
-          options: {
-            limit: 10 * 1024, // 10 KB 小文件使用base64 大文件使用url
-          },
+        test: /\.html$/i,
+          loader: 'html-loader',
+          options:{
+            sources: {
+              list:[
+                {
+                  tag: "a",
+                  attribute: "href",
+                  type: "src",
+                },
+                {
+                  tag: "img",
+                  attribute: "src",
+                  type: "src",
+                },
+
+              ]
+            }
+          }
+ 
+      },
+      // {
+      //   test: /.png$/,
+      //   use: {
+      //     loader: "url-loader",
+      //     options: {
+      //       limit: 10 *1024, // 10 KB 小文件使用base64 大文件使用url,
+      //       name:'[hash:10].[ext]'
+      //     },
+      //   },
+      // },
+
+      {
+        test: /\.png/,
+        type: 'asset/resource',
+        generator: {
+          // 重新生成文件夹
+
+          // filename: 'img/[name].[hash:7].[ext]',
         },
       },
 
       {
-        test: /.html$/,
-        use: {
-          loader: 'html-loader',
-          options: {
-            attrs: ['img:src', 'a:href']
-          }
-        }
+        test: /.md$/,
+        use: [
+          'html-loader',
+          './markdown-loader'
+        ]
       }
+
+
+      
     ],
   },
 };
