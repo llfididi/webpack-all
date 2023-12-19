@@ -5,7 +5,8 @@
   "author": "aa",
   "license": "MIT",
   "scripts": {
-    "build": "webpack"
+    "build": "webpack",
+    "dev": "webpack-dev-server"
   },
   "devDependencies": {
     "@babel/core": "^7.23.6",
@@ -18,12 +19,20 @@
     "html-loader": "^4.2.0",
     "html-webpack-plugin": "^5.5.4",
     "marked": "^11.1.0",
+    "mini-css-extract-plugin": "^2.7.6",
+    "optimize-css-assets-webpack-plugin": "^6.0.1",
     "progress-bar-webpack-plugin": "^2.1.0",
     "remark-loader": "^5.0.0",
     "style-loader": "^1.0.0",
+    "terser-webpack-plugin": "^5.3.9",
     "url-loader": "^4.1.1",
     "webpack": "^5.89.0",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "sideEffects": [
+    "./src/heading.js",
+    "*.css"
+  ]
 }
