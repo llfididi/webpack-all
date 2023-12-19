@@ -4,7 +4,7 @@ import './main.css'
 
 import icon from './icon.png'
 
-import footerHtml from './footer.html'
+// import footerHtml from './footer.html'
 import about from './about.md'
 
 
@@ -20,7 +20,7 @@ img.src = icon
 
 document.body.append(img)
 
-document.write(footerHtml)
+// document.write(footerHtml)
 
 document.write(about)
 console.log(about)

@@ -1,4 +1,33 @@
 const path = require("path");
+const webpack = require("webpack");
+
+// require('html-loader!htmlFile.html')
+
+const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+class MyPlugin {
+  apply (compiler) {
+    console.log('MyPlugin 启动')
+
+    compiler.hooks.emit.tap('MyPlugin', compilation => {
+      // compilation => 可以理解为此次打包的上下文
+      for (const name in compilation.assets) {
+        console.log(name)
+        console.log(compilation.assets[name].source())
+        if (name.endsWith('.js')) {
+          const contents = compilation.assets[name].source()
+          const withoutComments = contents.replace(/\/\*\*+\*\//g, '')
+          compilation.assets[name] = {
+            source: () => withoutComments,
+            size: () => withoutComments.length
+          }
+        }
+      }
+    })
+  }
+}
 
 module.exports = {
   // 这个属性有三种取值，分别是 production、development 和 none。
@@ -9,8 +38,8 @@ module.exports = {
   entry: "./src/index.js",
   output: {
     filename: "bundle.js",
-    // path: path.join(__dirname, 'output'),
-    publicPath: "dist/",
+    path: path.join(__dirname, "dist"),
+    publicPath: "",
   },
   module: {
     rules: [
@@ -32,29 +61,34 @@ module.exports = {
       //     use: 'file-loader'
       //   },
 
+      // {
+      //   test: /\.html$/i,
+      //     loader: 'html-loader',
+      //     options:{
+      //       sources: {
+      //         list:[
+      //           {
+      //             tag: "a",
+      //             attribute: "href",
+      //             type: "src",
+      //           },
+      //           {
+      //             tag: "img",
+      //             attribute: "src",
+      //             type: "src",
+      //           },
+      //           // {
+      //           //   tag:"script",
+      //           //   attribute: "src",
+      //           //   type: "src",
 
-      {
-        test: /\.html$/i,
-          loader: 'html-loader',
-          options:{
-            sources: {
-              list:[
-                {
-                  tag: "a",
-                  attribute: "href",
-                  type: "src",
-                },
-                {
-                  tag: "img",
-                  attribute: "src",
-                  type: "src",
-                },
+      //           // }
 
-              ]
-            }
-          }
- 
-      },
+      //         ]
+      //       }
+      //     }
+      // },
+
       // {
       //   test: /.png$/,
       //   use: {
@@ -68,24 +102,41 @@ module.exports = {
 
       {
         test: /\.png/,
-        type: 'asset/resource',
+        type: "asset/resource",
         generator: {
           // 重新生成文件夹
-
           // filename: 'img/[name].[hash:7].[ext]',
         },
       },
 
       {
         test: /.md$/,
-        use: [
-          'html-loader',
-          './markdown-loader'
-        ]
-      }
-
-
-      
+        use: ["html-loader", "./markdown-loader"],
+      },
     ],
   },
+  plugins: [
+    new webpack.ProgressPlugin(),
+    new CleanWebpackPlugin(),
+
+    new HtmlWebpackPlugin({
+      title: "Webpack Plugin Sample",
+      // meta: {
+      //   viewport: 'width=device-width'
+      // },
+
+      meta: {
+        viewport: "width=device-width, initial-scale=15, shrink-to-fit=no",
+      },
+      scriptLoading: "blocking",
+      template: "./src/index.html",
+    }),
+
+    // new HtmlWebpackPlugin({
+    //   filename: 'gooters.html',
+    //   template: './src/footer.html'
+    // }),
+    new CopyWebpackPlugin({ patterns: [{ from: "public" }] }),
+    new MyPlugin()
+  ],
 };
