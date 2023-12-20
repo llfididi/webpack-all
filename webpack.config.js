@@ -56,7 +56,7 @@ module.exports = {
   mode: "none",
   entry: {index:"./src/index.js",heading:"./src/heading.js"},
   output: {
-    filename: "[name]-[contenthash:8].bundle.js",
+    filename: "js/[name]-[contenthash:8].bundle.js",
     path: path.join(__dirname, "dist"),
     publicPath: "",
   },
@@ -105,6 +105,7 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
+
             presets: [
               // 如果 Babel 加载模块时已经转换了 ESM，则会导致 Tree Shaking 失效
               // ['@babel/preset-env', { modules: 'commonjs' }]
@@ -169,7 +170,7 @@ module.exports = {
         type: "asset/resource",
         generator: {
           // 重新生成文件夹
-          // filename: 'img/[name].[hash:7].[ext]',
+          filename: 'img/[name].[contenthash:8].[ext]',
         },
       },
 
@@ -220,7 +221,7 @@ module.exports = {
 
     // 提取css
     new MiniCssExtractPlugin({
-      filename:'[name]-[contenthash:8].bundle.css'
+      filename:'css/[name]-[contenthash:8].bundle.css'
     }),
 
     // 在 minimizer
